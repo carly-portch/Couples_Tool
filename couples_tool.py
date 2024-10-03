@@ -5,7 +5,7 @@ import numpy as np
 from datetime import date, datetime
 
 # Set the page config to wide mode
-st.set_page_config(page_title="Financial Planning App", layout="wide")
+st.set_page_config(page_title="Get Aligned as a Couple", layout="wide")
 
 # Function to calculate age from birthday
 def calculate_age(birthday):
@@ -50,7 +50,7 @@ def calculate_payback_date(amount, interest_rate, monthly_payment):
 
 # Function to display progress toward goals
 def display_goal_progress(goals, selected_year, account_balances):
-    st.subheader(f"Goal Progress for Year {selected_year}")
+    st.subheader(f"Goal Progress in {selected_year}:")
     if not goals:
         st.write("No goals have been added.")
         return
@@ -82,15 +82,15 @@ def show_dashboard(responses, selected_year):
 
     current_year = date.today().year
     
-    st.subheader("Your Financial Overview:")
-    st.write(f"**Age**: {responses.get('age', 'N/A')}")
-    st.write(f"**Monthly Take-Home Pay**: ${responses.get('paycheck', 0):.2f}")
-    st.write(f"**Monthly Expenses**: ${responses.get('total_expenses', 0):.2f}")
-    st.write(f"**Monthly Debt Payments**: ${responses.get('total_debt_payments', 0):.2f}")
+    st.subheader("Your Monthly Overview:")
+    # st.write(f"**Age**: {responses.get('age', 'N/A')}")
+    st.write(f"**Monthly Take-Home Pay**: ${responses.get('paycheck', 0):,.0f}")
+    st.write(f"**Monthly Expenses**: ${responses.get('total_expenses', 0):,.0f}")
+    st.write(f"**Monthly Debt Payments**: ${responses.get('total_debt_payments', 0):,.0f}")
     
     remaining_funds = responses['paycheck'] - responses['total_expenses'] - responses['total_debt_payments']
     responses['remaining_funds'] = remaining_funds if remaining_funds > 0 else 0  # Ensure remaining funds don't go negative
-    st.write(f"**Remaining Monthly Funds (After Expenses and Debt Payments)**: ${responses['remaining_funds']:.2f}")
+    st.write(f"**Remaining Monthly Funds (After Expenses and Debt Payments)**: ${responses['remaining_funds']:,.0f}")
 
     st.subheader("Your Accounts Today:")
     if responses['accounts']:
@@ -102,7 +102,7 @@ def show_dashboard(responses, selected_year):
 
     # Debt payback
     st.subheader("Debt Payback Dates:")
-    st.write("This is the estimated date you will finish paying off your debt assuming you maintain these monthly payments.")
+    st.write("These are the dates you will finish paying off your debts if you maintain your current monthly payments.")
     for debt in responses.get("debts", []):
         debt_name = debt['name']
         current_amount = debt['amount']
@@ -110,7 +110,7 @@ def show_dashboard(responses, selected_year):
         monthly_payment = debt['monthly_payment']
         try:
             payback_date = calculate_payback_date(current_amount, interest_rate, monthly_payment)
-            st.write(f"**{debt_name}**: {payback_date}")
+            st.write(f"**{debt_name}** will be paid off by: {payback_date}")
         except Exception as e:
             st.error(f"Error calculating payback date for {debt_name}: {e}")
 
@@ -130,7 +130,7 @@ def show_dashboard(responses, selected_year):
             future_value = calculate_future_value(balance, interest_rate, years_to_project, monthly_contribution)
             future_values[account_name] = future_value
             account_balances[account_name] = future_value
-            st.write(f"**{account_name}** Account Balance in {selected_year}: ${future_value:.2f}")
+            st.write(f"The estimated total balance in your **{account_name}** account in {selected_year} is: ${future_value:,.0f}")
         except Exception as e:
             st.error(f"Error calculating future value for {account_name}: {e}")
 
@@ -143,7 +143,7 @@ def show_dashboard(responses, selected_year):
         st.pyplot(fig)
 
     # Asset projections
-    st.subheader(f"Asset Projections for Year {selected_year}")
+    st.subheader(f"Asset Projections for {selected_year}:")
     for asset in responses.get("assets", []):
         asset_name = asset['name']
         current_value = asset['value']
@@ -192,7 +192,7 @@ def main():
         if st.session_state.get('income_info_complete', False):
             with st.expander("Expenses", expanded=not st.session_state.get('expenses_info_complete', False)):
                 st.subheader("Enter Your Monthly Expenses:")
-                expense_categories = st.text_input("Enter expense categories (comma-separated)", "Housing, Groceries, Transportation, Entertainment")
+                expense_categories = st.text_input("Enter approximate total monthly expenses (if you would prefer to input by expense category, please write the categories in the text box below with commas between each category)", "Total expenses")
                 expense_categories = [category.strip() for category in expense_categories.split(",")]
                 total_expenses = 0.0
                 for category in expense_categories:
@@ -275,7 +275,7 @@ def main():
                 st.subheader("Current Accounts:")
                 if responses['accounts']:
                     for idx, account in enumerate(responses['accounts']):
-                        st.markdown(f"**{account[0]}** - Type: {account[1]}, Interest Rate: {account[2]}%, Balance: ${account[3]:.2f}")
+                        st.markdown(f"**{account[0]}** - Type: {account[1]}, Interest Rate: {account[2]}%, Balance: ${account[3]:,.0f}")
                         
                         col_edit, col_delete = st.columns([1, 1])
                         with col_edit:
@@ -298,9 +298,10 @@ def main():
 
                 # Allocation inputs for each account
                 total_allocation = 0.0
+                st.write("Please specify what percentage of your remaining monthly income will be deposited into each account. The percentages must total 100%.")
                 for account in responses['accounts']:
                     account_name = account[0]
-                    percentage = st.number_input(f"Percentage to contribute for {account_name} (%):", min_value=0.0, max_value=100.0, key=f"alloc_{account_name}")
+                    percentage = st.number_input(f"Percentage of remaining monthly income to contribute to {account_name} (%):", min_value=0.0, max_value=100.0, key=f"alloc_{account_name}")
                     responses['allocations'][account_name] = percentage
                     total_allocation += percentage
 
@@ -404,7 +405,7 @@ def main():
                                 st.rerun()
 
     with col2:
-        selected_year = st.number_input("Change Year View", min_value=date.today().year, value=date.today().year + 5)
+        selected_year = st.number_input("Snapshot Year:", min_value=date.today().year, value=date.today().year + 5)
 
         if st.button("Show Dashboard"):
             show_dashboard(responses, selected_year)
