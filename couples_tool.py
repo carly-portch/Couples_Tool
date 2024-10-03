@@ -262,8 +262,8 @@ def main():
 
                 with st.form("add_account_form"):
                     acc_name = st.text_input("Account Name (e.g., Chequing, HYSA, etc.)")
-                    acc_type = st.selectbox("Account Type", ["Chequing","HYSA", "Regular Savings", "Invested", "Registered"])
-                    st.write("The interest rate represents the amount of interest gained based on the account it is in. If money in the account is invested, a good estimate is 7%, if the money is in a regular savings account, a good estimate is 1%.")
+                    acc_type = st.selectbox("Account Type", ["Chequing", "Regular Savings", "HYSA", "Invested", "Registered"])
+                    st.write("The interest rate represents the amount of interest gained based on the account it is in. If money in the account is invested, a good estimate is 7%, if the money is in a regular chequing/savings account, a good estimate is 0.05%.")
                     interest_rate = st.number_input("Interest Rate (%)", min_value=0.0)
                     balance = st.number_input("Current Balance ($)", min_value=0.0)
                     if st.form_submit_button("Add Account"):
