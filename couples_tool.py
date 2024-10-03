@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from datetime import date
 
 # Set the page config to wide mode
@@ -35,7 +34,13 @@ def display_goal_progress(goals, selected_year, account_balances):
             continue
 
         account_balance = account_balances[account_name]
-        progress = min(account_balance / goal_cost, 1)
+
+        # Prevent division by zero for goal cost
+        if goal_cost > 0:
+            progress = min(account_balance / goal_cost, 1)
+        else:
+            progress = 0
+
         progress_percentage = progress * 100
 
         st.write(f"**Goal: {goal_name}**")
@@ -61,6 +66,17 @@ def show_dashboard(responses_1, responses_2, joint_responses, selected_year):
         if responses['accounts']:
             accounts_df = pd.DataFrame(responses['accounts'], columns=['Account Name', 'Type', 'Interest Rate (%)', 'Balance ($)'])
             st.write(accounts_df)
+
+            # Project future values for accounts
+            st.subheader("Projected Account Values in " + str(selected_year) + ":")
+            for account in responses['accounts']:
+                account_name = account[0]
+                account_type = account[1]
+                interest_rate = account[2]
+                balance = account[3]
+                future_value = calculate_future_value(balance, interest_rate, selected_year - date.today().year, 0)
+                st.write(f"{account_name} ({account_type}): ${future_value:,.0f}")
+
         else:
             st.write("No accounts added yet.")
 
@@ -95,6 +111,16 @@ def show_dashboard(responses_1, responses_2, joint_responses, selected_year):
     if joint_responses['joint_accounts']:
         joint_accounts_df = pd.DataFrame(joint_responses['joint_accounts'], columns=['Account Name', 'Type', 'Interest Rate (%)', 'Balance ($)'])
         st.write(joint_accounts_df)
+
+        # Project future values for joint accounts
+        st.subheader("Projected Joint Account Values in " + str(selected_year) + ":")
+        for account in joint_responses['joint_accounts']:
+            account_name = account[0]
+            account_type = account[1]
+            interest_rate = account[2]
+            balance = account[3]
+            future_value = calculate_future_value(balance, interest_rate, selected_year - date.today().year, 0)
+            st.write(f"{account_name} ({account_type}): ${future_value:,.0f}")
     else:
         st.write("No joint accounts added yet.")
 
