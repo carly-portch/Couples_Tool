@@ -306,8 +306,69 @@ def main():
             else:
                 st.error("Please enter a joint goal name.")
 
-    if st.button("Show Couples Dashboard"):
+    # Summary Section
+    st.header("Summary of Inputs")
+    st.subheader("Partner 1's Accounts:")
+    if responses_1['accounts']:
+        for account in responses_1['accounts']:
+            st.write(f"- {account[0]} ({account[1]}): ${account[3]:,.2f}")
+    else:
+        st.write("No accounts added.")
+
+    st.subheader("Partner 1's Debts:")
+    if responses_1['debts']:
+        for debt in responses_1['debts']:
+            st.write(f"- {debt[0]}: ${debt[1]:,.2f} at {debt[2]:,.2f}% interest, monthly payment ${debt[3]:,.2f}")
+    else:
+        st.write("No debts added.")
+
+    st.subheader("Partner 1's Goals:")
+    if responses_1['goals']:
+        for goal in responses_1['goals']:
+            st.write(f"- {goal['name']}: ${goal['cost']:.2f} by {goal['target_year']}, Account: {goal['account']}")
+    else:
+        st.write("No goals added.")
+
+    st.subheader("Partner 2's Accounts:")
+    if responses_2['accounts']:
+        for account in responses_2['accounts']:
+            st.write(f"- {account[0]} ({account[1]}): ${account[3]:,.2f}")
+    else:
+        st.write("No accounts added.")
+
+    st.subheader("Partner 2's Debts:")
+    if responses_2['debts']:
+        for debt in responses_2['debts']:
+            st.write(f"- {debt[0]}: ${debt[1]:,.2f} at {debt[2]:,.2f}% interest, monthly payment ${debt[3]:,.2f}")
+    else:
+        st.write("No debts added.")
+
+    st.subheader("Partner 2's Goals:")
+    if responses_2['goals']:
+        for goal in responses_2['goals']:
+            st.write(f"- {goal['name']}: ${goal['cost']:.2f} by {goal['target_year']}, Account: {goal['account']}")
+    else:
+        st.write("No goals added.")
+
+    st.subheader("Joint Accounts:")
+    if joint_responses['joint_accounts']:
+        for account in joint_responses['joint_accounts']:
+            st.write(f"- {account[0]} ({account[1]}): ${account[3]:,.2f}")
+    else:
+        st.write("No joint accounts added.")
+
+    st.subheader("Joint Goals:")
+    if joint_responses['joint_goals']:
+        for goal in joint_responses['joint_goals']:
+            st.write(f"- {goal['name']}: ${goal['cost']:.2f} by {goal['target_year']}")
+    else:
+        st.write("No joint goals added.")
+
+    # Button to display the dashboard
+    if st.button("Show Dashboard"):
+        st.session_state.dashboard_run = True
         show_dashboard(responses_1, responses_2, joint_responses, selected_year)
 
-if __name__ == '__main__':
+# Run the main function
+if __name__ == "__main__":
     main()
