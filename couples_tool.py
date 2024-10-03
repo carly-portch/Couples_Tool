@@ -90,15 +90,31 @@ def show_dashboard(responses, selected_year):
     
     remaining_funds = responses['paycheck'] - responses['total_expenses'] - responses['total_debt_payments']
     responses['remaining_funds'] = remaining_funds if remaining_funds > 0 else 0  # Ensure remaining funds don't go negative
-    st.write(f"**Remaining Funds After Expenses**: ${responses['remaining_funds']:.2f}")
+    st.write(f"**Remaining Monthly Funds (After Expenses and Debt Payments)**: ${responses['remaining_funds']:.2f}")
 
-    st.subheader("Your Accounts:")
+    st.subheader("Your Accounts Today:")
     if responses['accounts']:
         accounts_df = pd.DataFrame(responses['accounts'], columns=['Account Name', 'Type', 'Interest Rate (%)', 'Balance'])
         st.write(accounts_df)
     else:
         st.write("No accounts added yet.")
 
+
+    # Debt payback
+    st.subheader("Debt Payback Dates")
+    for debt in responses.get("debts", []):
+        debt_name = debt['name']
+        current_amount = debt['amount']
+        interest_rate = debt['rate']
+        monthly_payment = debt['monthly_payment']
+        try:
+            payback_date = calculate_payback_date(current_amount, interest_rate, monthly_payment)
+            st.write(f"**{debt_name}**: {payback_date}")
+        except Exception as e:
+            st.error(f"Error calculating payback date for {debt_name}: {e}")
+
+    st.session_state.dashboard_run = True
+    
     st.subheader(f"Projected Account Values in {selected_year}")
     future_values = {}
     account_balances = {}  # To track balances for goal progress
@@ -113,7 +129,7 @@ def show_dashboard(responses, selected_year):
             future_value = calculate_future_value(balance, interest_rate, years_to_project, monthly_contribution)
             future_values[account_name] = future_value
             account_balances[account_name] = future_value
-            st.write(f"**{account_name}**: Projected Value in {selected_year} - ${future_value:.2f}")
+            st.write(f"**{account_name}**: ${future_value:.2f}")
         except Exception as e:
             st.error(f"Error calculating future value for {account_name}: {e}")
 
@@ -125,9 +141,6 @@ def show_dashboard(responses, selected_year):
         plt.xticks(rotation=45)
         st.pyplot(fig)
 
-    # Display goal progress
-    display_goal_progress(responses.get("goals", []), selected_year, account_balances)
-
     # Asset projections
     st.subheader(f"Asset Projections for Year {selected_year}")
     for asset in responses.get("assets", []):
@@ -136,21 +149,9 @@ def show_dashboard(responses, selected_year):
         appreciation_rate = asset['rate']
         future_asset_value = calculate_future_value(current_value, appreciation_rate, selected_year - current_year, 0)
         st.write(f"**{asset_name}**: Projected Value in {selected_year} - ${future_asset_value:.2f}")
-
-    # Debt payback
-    st.subheader("Debts and Payback Dates")
-    for debt in responses.get("debts", []):
-        debt_name = debt['name']
-        current_amount = debt['amount']
-        interest_rate = debt['rate']
-        monthly_payment = debt['monthly_payment']
-        try:
-            payback_date = calculate_payback_date(current_amount, interest_rate, monthly_payment)
-            st.write(f"**{debt_name}**: Payback Date - {payback_date}")
-        except Exception as e:
-            st.error(f"Error calculating payback date for {debt_name}: {e}")
-
-    st.session_state.dashboard_run = True
+        
+    # Display goal progress
+    display_goal_progress(responses.get("goals", []), selected_year, account_balances)
 
 # Main function to run the app
 def main():
@@ -182,7 +183,7 @@ def main():
             st.session_state.personal_info_complete = True
 
         if st.session_state.get('personal_info_complete', False):
-            with st.expander("Income Information", expanded=not st.session_state.get('income_info_complete', False)):
+            with st.expander("Income", expanded=not st.session_state.get('income_info_complete', False)):
                 paycheck = st.number_input("What is your monthly take-home pay after tax?", min_value=0.0)
                 responses['paycheck'] = paycheck
                 st.session_state.income_info_complete = True
