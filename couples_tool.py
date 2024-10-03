@@ -130,7 +130,7 @@ def show_dashboard(responses, selected_year):
             future_value = calculate_future_value(balance, interest_rate, years_to_project, monthly_contribution)
             future_values[account_name] = future_value
             account_balances[account_name] = future_value
-            st.write(f"The estimated balance in your **{account_name}** account in {selected_year} is: ${future_value:,.0f}")
+            st.write(f"Estimated balance in your **{account_name}** account in {selected_year}: ${future_value:,.0f}")
         except Exception as e:
             st.error(f"Error calculating future value for {account_name}: {e}")
 
@@ -227,7 +227,7 @@ def main():
                 st.subheader("Current Debts:")
                 if responses['debts']:
                     for idx, debt in enumerate(responses['debts']):
-                        st.markdown(f"**{debt['name']}** - Amount: ${debt['amount']:,.0f}, Interest Rate: {debt['rate']}%, Monthly Payment: ${debt['monthly_payment']:,.0f}")
+                        st.markdown(f"**{debt['name']}** - Amount: ${debt['amount']:,.0f}, Monthly Payment: ${debt['monthly_payment']:,.0f}")
                         
                         col_edit_debt, col_delete_debt = st.columns([1, 1])
                         with col_edit_debt:
@@ -330,7 +330,7 @@ def main():
                 st.subheader("Current Assets:")
                 if responses['assets']:
                     for idx, asset in enumerate(responses['assets']):
-                        st.markdown(f"**{asset['name']}** - Value: ${asset['value']}, Appreciation Rate: {asset['rate']}%")
+                        st.markdown(f"**{asset['name']}** - Value: ${asset['value']:,0f}, Appreciation Rate: {asset['rate']}%")
                         
                         col_edit_asset, col_delete_asset = st.columns([1, 1])
                         with col_edit_asset:
