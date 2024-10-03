@@ -227,8 +227,6 @@ def main():
                 st.subheader("Current Debts:")
                 if responses['debts']:
                     for idx, debt in enumerate(responses['debts']):
-                        #st.markdown(f"**{debt['name']}** - Amount: {debt['amount']:,.0f}, Interest: {debt['rate']:,.0f}, Monthly Payment: {debt['monthly_payment']:,.0f}")
-                        #st.markdown(f"**{debt['name']}** - Amount: ${debt['amount']:,.0f}, Interest: {debt['rate']}%, Monthly Payment: ${debt['monthly_payment']:,.0f}")
                         st.markdown(f"**{debt['name']}** - Amount: \${debt['amount']:,.0f}, Interest: {debt['rate']}%, Monthly Payment: \${debt['monthly_payment']:,.0f}")
                         
                         col_edit_debt, col_delete_debt = st.columns([1, 1])
@@ -264,7 +262,8 @@ def main():
 
                 with st.form("add_account_form"):
                     acc_name = st.text_input("Account Name (e.g., Chequing, HYSA, etc.)")
-                    acc_type = st.selectbox("Account Type", ["HYSA", "Regular Savings", "Invested", "Registered"])
+                    acc_type = st.selectbox("Account Type", ["Chequing","HYSA", "Regular Savings", "Invested", "Registered"])
+                    st.write("The interest rate represents the amount of interest gained based on the account it is in. If money in the account is invested, a good estimate is 7%, if the money is in a regular savings account, a good estimate is 1%.")
                     interest_rate = st.number_input("Interest Rate (%)", min_value=0.0)
                     balance = st.number_input("Current Balance ($)", min_value=0.0)
                     if st.form_submit_button("Add Account"):
