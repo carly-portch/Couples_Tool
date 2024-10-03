@@ -182,9 +182,9 @@ def main():
     with col1:
         st.header("Partner 1 Information")
         st.subheader("Personal Income")
-        responses_1['paycheck'] = st.number_input("Partner 1: What is your monthly take-home pay after tax?", min_value=0.0)
+        responses_1['paycheck'] = st.number_input("Partner 1: What is your monthly take-home pay after tax?", min_value=0.0, key='partner1_paycheck')
         st.subheader("Expenses")
-        responses_1['total_expenses'] = st.number_input("Partner 1: What are your total monthly expenses?", min_value=0.0)
+        responses_1['total_expenses'] = st.number_input("Partner 1: What are your total monthly expenses?", min_value=0.0, key='partner1_expenses')
 
         # Account Input
         st.subheader("Add Account:")
@@ -201,10 +201,10 @@ def main():
 
         # Debt Input
         st.subheader("Add Debt:")
-        debt_name = st.text_input("Debt Name", key='debt_1')
+        debt_name = st.text_input("Debt Name", key='debt_name_1')
         debt_amount = st.number_input("Amount ($)", min_value=0.0, key='debt_amount_1')
         debt_interest_rate = st.number_input("Interest Rate (%)", min_value=0.0, key='debt_interest_rate_1')
-        monthly_payment = st.number_input("Monthly Payment ($)", min_value=0.0)
+        monthly_payment = st.number_input("Monthly Payment ($)", min_value=0.0, key='monthly_payment_1')
         if st.button("Add this Debt for Partner 1"):
             if debt_name:
                 responses_1['debts'].append([debt_name, debt_amount, debt_interest_rate, monthly_payment])
@@ -214,7 +214,7 @@ def main():
 
         # Goal Input
         st.subheader("Add Goal:")
-        goal_name = st.text_input("Goal Name", key='goal_1')
+        goal_name = st.text_input("Goal Name", key='goal_name_1')
         goal_cost = st.number_input("Goal Cost ($)", min_value=0.0, key='goal_cost_1')
         target_year = st.number_input("Target Year", min_value=date.today().year, value=date.today().year, key='target_year_1')
         goal_account = st.selectbox("Account for Goal", options=[a[0] for a in responses_1['accounts']], key='goal_account_1')
@@ -229,9 +229,9 @@ def main():
     with col2:
         st.header("Partner 2 Information")
         st.subheader("Personal Income")
-        responses_2['paycheck'] = st.number_input("Partner 2: What is your monthly take-home pay after tax?", min_value=0.0)
+        responses_2['paycheck'] = st.number_input("Partner 2: What is your monthly take-home pay after tax?", min_value=0.0, key='partner2_paycheck')
         st.subheader("Expenses")
-        responses_2['total_expenses'] = st.number_input("Partner 2: What are your total monthly expenses?", min_value=0.0)
+        responses_2['total_expenses'] = st.number_input("Partner 2: What are your total monthly expenses?", min_value=0.0, key='partner2_expenses')
 
         # Account Input
         st.subheader("Add Account:")
@@ -248,10 +248,10 @@ def main():
 
         # Debt Input
         st.subheader("Add Debt:")
-        debt_name = st.text_input("Debt Name", key='debt_2')
+        debt_name = st.text_input("Debt Name", key='debt_name_2')
         debt_amount = st.number_input("Amount ($)", min_value=0.0, key='debt_amount_2')
         debt_interest_rate = st.number_input("Interest Rate (%)", min_value=0.0, key='debt_interest_rate_2')
-        monthly_payment = st.number_input("Monthly Payment ($)", min_value=0.0)
+        monthly_payment = st.number_input("Monthly Payment ($)", min_value=0.0, key='monthly_payment_2')
         if st.button("Add this Debt for Partner 2"):
             if debt_name:
                 responses_2['debts'].append([debt_name, debt_amount, debt_interest_rate, monthly_payment])
@@ -261,7 +261,7 @@ def main():
 
         # Goal Input
         st.subheader("Add Goal:")
-        goal_name = st.text_input("Goal Name", key='goal_2')
+        goal_name = st.text_input("Goal Name", key='goal_name_2')
         goal_cost = st.number_input("Goal Cost ($)", min_value=0.0, key='goal_cost_2')
         target_year = st.number_input("Target Year", min_value=date.today().year, value=date.today().year, key='target_year_2')
         goal_account = st.selectbox("Account for Goal", options=[a[0] for a in responses_2['accounts']], key='goal_account_2')
@@ -276,33 +276,33 @@ def main():
     with col_joint:
         st.header("Joint Information")
         st.subheader("Joint Income")
-        joint_responses['joint_income'] = st.number_input("What is your joint monthly income?", min_value=0.0)
+        joint_responses['joint_income'] = st.number_input("What is your joint monthly income?", min_value=0.0, key='joint_income')
         st.subheader("Joint Expenses")
-        joint_responses['joint_expenses'] = st.number_input("What are your joint monthly expenses?", min_value=0.0)
-        joint_responses['joint_debt_payments'] = st.number_input("Joint Monthly Debt Payments (shared debts)", min_value=0.0)
+        joint_responses['joint_expenses'] = st.number_input("What are your joint monthly expenses?", min_value=0.0, key='joint_expenses')
+        joint_responses['joint_debt_payments'] = st.number_input("Joint Monthly Debt Payments (shared debts)", min_value=0.0, key='joint_debt_payments')
 
         # Joint Account Input
         st.subheader("Add Joint Account:")
-        account_name = st.text_input("Joint Account Name", key='joint_account')
-        account_type = st.selectbox("Joint Account Type", options=["Checking", "Savings", "Investment"], key='joint_account_type')
-        interest_rate = st.number_input("Joint Interest Rate (%)", min_value=0.0, key='joint_interest_rate')
-        balance = st.number_input("Joint Account Balance ($)", min_value=0.0, key='joint_balance')
+        joint_account_name = st.text_input("Joint Account Name", key='joint_account_name')
+        joint_account_type = st.selectbox("Joint Account Type", options=["Checking", "Savings", "Investment"], key='joint_account_type')
+        joint_interest_rate = st.number_input("Joint Interest Rate (%)", min_value=0.0, key='joint_interest_rate')
+        joint_balance = st.number_input("Joint Account Balance ($)", min_value=0.0, key='joint_balance')
         if st.button("Add this Joint Account"):
-            if account_name:
-                joint_responses['joint_accounts'].append([account_name, account_type, interest_rate, balance])
-                st.success(f"Added Joint Account: {account_name}")
+            if joint_account_name:
+                joint_responses['joint_accounts'].append([joint_account_name, joint_account_type, joint_interest_rate, joint_balance])
+                st.success(f"Added Joint Account: {joint_account_name}")
             else:
                 st.error("Please enter a joint account name.")
 
         # Joint Goal Input
         st.subheader("Add Joint Goal:")
-        goal_name = st.text_input("Joint Goal Name", key='joint_goal')
-        goal_cost = st.number_input("Joint Goal Cost ($)", min_value=0.0, key='joint_goal_cost')
-        target_year = st.number_input("Joint Target Year", min_value=date.today().year, value=date.today().year, key='joint_target_year')
+        joint_goal_name = st.text_input("Joint Goal Name", key='joint_goal_name')
+        joint_goal_cost = st.number_input("Joint Goal Cost ($)", min_value=0.0, key='joint_goal_cost')
+        joint_target_year = st.number_input("Joint Target Year", min_value=date.today().year, value=date.today().year, key='joint_target_year')
         if st.button("Add this Joint Goal"):
-            if goal_name:
-                joint_responses['joint_goals'].append({"name": goal_name, "cost": goal_cost, "target_year": target_year})
-                st.success(f"Added Joint Goal: {goal_name}")
+            if joint_goal_name:
+                joint_responses['joint_goals'].append({"name": joint_goal_name, "cost": joint_goal_cost, "target_year": joint_target_year})
+                st.success(f"Added Joint Goal: {joint_goal_name}")
             else:
                 st.error("Please enter a joint goal name.")
 
