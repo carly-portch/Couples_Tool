@@ -72,9 +72,9 @@ def display_goal_progress(goals, selected_year, account_balances):
 
         # Display progress bar and details
         st.write(f"**Goal: {goal_name}**")
-        st.write(f"Goal Cost: ${goal_cost}, Target Year: {goal_year}")
+        st.write(f"Cost: ${goal_cost:,.0f}, Target Year: {goal_year}")
         st.progress(progress)
-        st.write(f"{progress_percentage:.2f}% of goal achieved.\n")
+        st.write(f"{progress_percentage:.0f}% of goal achieved.\n")
 
 # Function to display the dashboard based on user responses
 def show_dashboard(responses, selected_year):
@@ -94,7 +94,7 @@ def show_dashboard(responses, selected_year):
 
     st.subheader("Your Accounts Today:")
     if responses['accounts']:
-        accounts_df = pd.DataFrame(responses['accounts'], columns=['Account Name', 'Type', 'Interest Rate (%)', 'Balance'])
+        accounts_df = pd.DataFrame(responses['accounts'], columns=['Account Name', 'Type', 'Interest Rate (%)', 'Balance ($)'])
         st.write(accounts_df)
     else:
         st.write("No accounts added yet.")
@@ -130,7 +130,7 @@ def show_dashboard(responses, selected_year):
             future_value = calculate_future_value(balance, interest_rate, years_to_project, monthly_contribution)
             future_values[account_name] = future_value
             account_balances[account_name] = future_value
-            st.write(f"The estimated total balance in your **{account_name}** account in {selected_year} is: ${future_value:,.0f}")
+            st.write(f"The estimated balance in your **{account_name}** account in {selected_year} is: ${future_value:,.0f}")
         except Exception as e:
             st.error(f"Error calculating future value for {account_name}: {e}")
 
@@ -149,7 +149,7 @@ def show_dashboard(responses, selected_year):
         current_value = asset['value']
         appreciation_rate = asset['rate']
         future_asset_value = calculate_future_value(current_value, appreciation_rate, selected_year - current_year, 0)
-        st.write(f"Estimated value of **{asset_name}** in {selected_year}: ${future_asset_value:,.0f}")
+        st.write(f"The estimated value of **{asset_name}** in {selected_year} is: ${future_asset_value:,.0f}")
         
     # Display goal progress
     display_goal_progress(responses.get("goals", []), selected_year, account_balances)
