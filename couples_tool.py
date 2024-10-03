@@ -227,7 +227,7 @@ def main():
                 st.subheader("Current Debts:")
                 if responses['debts']:
                     for idx, debt in enumerate(responses['debts']):
-                        st.markdown(f"**{debt['name']}** - Amount: ${debt['amount']:,.0f}, Monthly Payment: ${debt['monthly_payment']:,.0f}")
+                        st.markdown(f"**{debt['name']}** - Amount: {debt['amount']:,.0f}, Interest: {debt['rate']:,.0f}, Monthly Payment: {debt['monthly_payment']:,.0f}")
                         
                         col_edit_debt, col_delete_debt = st.columns([1, 1])
                         with col_edit_debt:
