@@ -101,7 +101,8 @@ def show_dashboard(responses, selected_year):
 
 
     # Debt payback
-    st.subheader("Debt Payback Dates")
+    st.subheader("Debt Payback Dates:")
+    st.write("This is the estimated date you will finish paying off your debt assuming you maintain these monthly payments.")
     for debt in responses.get("debts", []):
         debt_name = debt['name']
         current_amount = debt['amount']
@@ -114,8 +115,9 @@ def show_dashboard(responses, selected_year):
             st.error(f"Error calculating payback date for {debt_name}: {e}")
 
     st.session_state.dashboard_run = True
-    
-    st.subheader(f"Projected Account Values in {selected_year}")
+
+    st.subheader(f"Financial Snapshot in {selected_year}:")
+    st.write(f"Projected Account Values in {selected_year}")
     future_values = {}
     account_balances = {}  # To track balances for goal progress
 
@@ -148,7 +150,7 @@ def show_dashboard(responses, selected_year):
         current_value = asset['value']
         appreciation_rate = asset['rate']
         future_asset_value = calculate_future_value(current_value, appreciation_rate, selected_year - current_year, 0)
-        st.write(f"**{asset_name}**: Projected Value in {selected_year} - ${future_asset_value:.2f}")
+        st.write(f"**{asset_name}**: ${future_asset_value:.0f}")
         
     # Display goal progress
     display_goal_progress(responses.get("goals", []), selected_year, account_balances)
