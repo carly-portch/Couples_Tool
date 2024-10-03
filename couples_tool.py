@@ -227,7 +227,9 @@ def main():
                 st.subheader("Current Debts:")
                 if responses['debts']:
                     for idx, debt in enumerate(responses['debts']):
-                        st.markdown(f"**{debt['name']}** - Amount: {debt['amount']:,.0f}, Interest: {debt['rate']:,.0f}, Monthly Payment: {debt['monthly_payment']:,.0f}")
+                        #st.markdown(f"**{debt['name']}** - Amount: {debt['amount']:,.0f}, Interest: {debt['rate']:,.0f}, Monthly Payment: {debt['monthly_payment']:,.0f}")
+                        st.markdown(f"**{debt['name']}** - Amount: ${debt['amount']:,.0f}, Interest: {debt['rate']}%, Monthly Payment: ${debt['monthly_payment']:,.0f}")
+
                         
                         col_edit_debt, col_delete_debt = st.columns([1, 1])
                         with col_edit_debt:
@@ -330,7 +332,7 @@ def main():
                 st.subheader("Current Assets:")
                 if responses['assets']:
                     for idx, asset in enumerate(responses['assets']):
-                        st.markdown(f"**{asset['name']}** - Value: ${asset['value']:,0f}, Appreciation Rate: {asset['rate']}%")
+                        st.markdown(f"**{asset['name']}** - Value: ${asset['value']:,.0f}, Appreciation Rate: {asset['rate']}%")
                         
                         col_edit_asset, col_delete_asset = st.columns([1, 1])
                         with col_edit_asset:
